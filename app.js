@@ -76,6 +76,73 @@ app.get('/api/v1/tours/:id', (request, response) => {
       });
 });
 
+app.patch('/api/v1/tours/:id', (request, response) => {
+  let tour = tours.find((tour) => {
+    return tour.id.toString() === request.params.id;
+  });
+  if (tour) {
+    let newTour = request.body;
+
+    for (const property in newTour) {
+      tour[property] = newTour[property];
+    }
+
+    tours.forEach((element) => {
+      if (element.id.toString() === tour.id.toString()) {
+        element = tour;
+      }
+    });
+
+    fs.writeFile(
+      `${__dirname}/dev-data/data/tours-simple.json`,
+      JSON.stringify(tours),
+      (err) => {
+        response.status(200).send({
+          status: 'success',
+          data: {
+            tour,
+          },
+        });
+      }
+    );
+  } else {
+    response.status(400).send({
+      status: 'fail',
+      message: 'There is no such a tour',
+    });
+  }
+});
+
+app.delete('/api/v1/tours/:id', (request, response) => {
+  let tour = tours.find((tour) => {
+    return tour.id.toString() === request.params.id;
+  });
+
+  let index = tours.indexOf(tour) || null;
+
+  if (index) {
+    tours.splice(index, 1);
+
+    fs.writeFile(
+      `${__dirname}/dev-data/data/tours-simple.json`,
+      JSON.stringify(tours),
+      (err) => {
+        response.status(204).send({
+          status: 'success',
+          data: {
+            tour,
+          },
+        });
+      }
+    );
+  } else {
+    response.status(400).send({
+      status: 'fail',
+      message: 'There is no such a tour',
+    });
+  }
+});
+
 /**
  * PORTS
  */
