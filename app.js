@@ -4,6 +4,7 @@
 const fs = require('fs');
 const express = require('express');
 const uuidv4 = require('uuid');
+const morgan = require('morgan');
 
 /**
  * Creating Main App
@@ -22,6 +23,12 @@ const tours = JSON.parse(
  */
 app.use(express.json());
 
+app.use((request, response, next) => {
+  console.log('Hello from the middleware 👋');
+  next();
+});
+
+app.use(morgan('dev'));
 /**
  * CRUD Functions
  * @param request
