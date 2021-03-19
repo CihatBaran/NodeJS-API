@@ -55,6 +55,26 @@ app.post('/api/v1/tours', (request, response) => {
     }
   );
 });
+// => /api/v1/tours/:id you have to spesify id
+// => /api/v1/tours/:id? now it is optional to spesify id
+
+app.get('/api/v1/tours/:id', (request, response) => {
+  const tour = tours.find((el) => {
+    return el.id.toString() === request.params.id.toString();
+  });
+  tour
+    ? response.status(200).send({
+        status: 'success',
+        result: tour === '' ? 0 : 1,
+        data: {
+          tour,
+        },
+      })
+    : response.status(400).send({
+        status: 'fail',
+        message: 'there is no such a tour..',
+      });
+});
 
 /**
  * PORTS
