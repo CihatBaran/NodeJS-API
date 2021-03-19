@@ -23,9 +23,13 @@ const tours = JSON.parse(
 app.use(express.json());
 
 /**
- * REQUEST HANDLERS
+ * CRUD Functions
+ * @param request
+ * @param response
+ * @return serverResponse
  */
-app.get('/api/v1/tours', (request, response) => {
+
+const getAllTours = (request, response) => {
   response.status(200).json({
     status: 'success',
     results: tours.length,
@@ -33,9 +37,9 @@ app.get('/api/v1/tours', (request, response) => {
       tours,
     },
   });
-});
+};
 
-app.post('/api/v1/tours', (request, response) => {
+const createTours = (request, response) => {
   const newId = uuidv4.v4();
 
   const newTour = { id: newId, ...request.body };
@@ -54,11 +58,10 @@ app.post('/api/v1/tours', (request, response) => {
       });
     }
   );
-});
+};
 // => /api/v1/tours/:id you have to spesify id
 // => /api/v1/tours/:id? now it is optional to spesify id
-
-app.get('/api/v1/tours/:id', (request, response) => {
+const getSpesificTours = (request, response) => {
   const tour = tours.find((el) => {
     return el.id.toString() === request.params.id.toString();
   });
@@ -74,9 +77,9 @@ app.get('/api/v1/tours/:id', (request, response) => {
         status: 'fail',
         message: 'there is no such a tour..',
       });
-});
+};
 
-app.patch('/api/v1/tours/:id', (request, response) => {
+const updateSpesificTours = (request, response) => {
   let tour = tours.find((tour) => {
     return tour.id.toString() === request.params.id;
   });
@@ -111,9 +114,9 @@ app.patch('/api/v1/tours/:id', (request, response) => {
       message: 'There is no such a tour',
     });
   }
-});
+};
 
-app.delete('/api/v1/tours/:id', (request, response) => {
+const deleteSpesificTours = (request, response) => {
   let tour = tours.find((tour) => {
     return tour.id.toString() === request.params.id;
   });
@@ -129,9 +132,7 @@ app.delete('/api/v1/tours/:id', (request, response) => {
       (err) => {
         response.status(204).send({
           status: 'success',
-          data: {
-            tour,
-          },
+          data: null,
         });
       }
     );
@@ -141,7 +142,18 @@ app.delete('/api/v1/tours/:id', (request, response) => {
       message: 'There is no such a tour',
     });
   }
-});
+};
+
+/**
+ * REQUEST HANDLERS
+ */
+
+app.route('/api/v1/tours').get(getAllTours).post(createTours);
+app
+  .route('/api/v1/tours/:id')
+  .get(getSpesificTours)
+  .patch(updateSpesificTours)
+  .delete(deleteSpesificTours);
 
 /**
  * PORTS
