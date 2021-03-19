@@ -1,6 +1,7 @@
 /**
  * Importing
  */
+const { request } = require('express');
 const express = require('express');
 
 const {
@@ -9,6 +10,8 @@ const {
   updateSpesificTours,
   getSpesificTours,
   deleteSpesificTours,
+  middlewareCheckID,
+  middlewareCheckCreateTour,
 } = require(`./../controller/toursController`);
 
 /**
@@ -17,9 +20,18 @@ const {
 const router = express.Router();
 
 /**
+ * Middleware
+ */
+
+router.param('id', (request, response, next, value) => {
+  console.log(`Tour id that is requested is: ${value}`);
+  middlewareCheckID(request, response, next, value);
+});
+
+/**
  * Routers URL
  */
-router.route('/').get(getAllTours).post(createTours);
+router.route('/').get(getAllTours).post(middlewareCheckCreateTour, createTours);
 
 router
   .route('/:id')
