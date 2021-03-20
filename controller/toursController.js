@@ -13,6 +13,7 @@ const tours = JSON.parse(
 
 /**
  * Middleware
+ * @returns next()
  */
 const middlewareCheckID = (request, response, next, value) => {
   let tour = tours.find((tour) => {
