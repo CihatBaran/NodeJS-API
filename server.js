@@ -3,6 +3,7 @@
  * It should be above everything to be able to become reachable
  */
 const dotenv = require('dotenv');
+
 dotenv.config({ path: './config.env' });
 /**
  * Importing

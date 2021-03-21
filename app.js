@@ -3,7 +3,6 @@
  */
 const express = require('express');
 const morgan = require('morgan');
-const dotenv = require('dotenv');
 
 const tourRouter = require('./routes/toursRoute');
 const userRouter = require('./routes/usersRoute');

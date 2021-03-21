@@ -16,9 +16,7 @@ const tours = JSON.parse(
  * @returns next()
  */
 const middlewareCheckID = (request, response, next, value) => {
-  let tour = tours.find((tour) => {
-    return tour.id.toString() === request.params.id;
-  });
+  const tour = tours.find((val) => val.id.toString() === request.params.id);
   if (!tour) {
     return response.status(400).send({
       status: 'fail',
@@ -30,7 +28,7 @@ const middlewareCheckID = (request, response, next, value) => {
 
 const middlewareCheckCreateTour = (req, res, next) => {
   const requestObject = req.body;
-  if (requestObject['price'] && requestObject['name']) {
+  if (requestObject.price && requestObject.name) {
     next();
   } else {
     return res.status(400).send({
@@ -81,6 +79,7 @@ const createTours = (request, response) => {
 // => /api/v1/tours/:id you have to spesify id
 // => /api/v1/tours/:id? now it is optional to spesify id
 const getSpesificTours = (request, response) => {
+  const tour = tours.find((val) => val.id.toString() === request.params.id);
   response.status(200).send({
     status: 'success',
     result: tour === '' ? 0 : 1,
@@ -91,11 +90,12 @@ const getSpesificTours = (request, response) => {
 };
 
 const updateSpesificTours = (request, response) => {
-  let newTour = request.body;
+  const newTour = request.body;
+  const tour = tours.find((val) => val.id.toString() === request.params.id);
 
-  for (const property in newTour) {
-    tour[property] = newTour[property];
-  }
+  Object.keys(newTour).forEach((el) => {
+    tour[el] = newTour[el];
+  });
 
   tours.forEach((element) => {
     if (element.id.toString() === tour.id.toString()) {
@@ -118,11 +118,9 @@ const updateSpesificTours = (request, response) => {
 };
 
 const deleteSpesificTours = (request, response) => {
-  let tour = tours.find((tour) => {
-    return tour.id.toString() === request.params.id;
-  });
+  const tour = tours.find((val) => val.id.toString() === request.params.id);
 
-  let index = tours.indexOf(tour) || null;
+  const index = tours.indexOf(tour) || null;
 
   tours.splice(index, 1);
 
